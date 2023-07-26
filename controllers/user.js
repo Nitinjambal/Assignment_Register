@@ -34,3 +34,38 @@ export const RegisterNewUser = async (req, res, next) => {
         })
     }
 };
+
+export const LoginUser = async (req, res) => {
+    try {
+        const { email, password } = req.body;
+        const user = await User.findOne({ email })
+
+        if (!user){
+            return res.status(404).json({
+                success: false,
+                message: "Invalid User or Password"
+            }) 
+        }
+
+        const isMatch = password==user.password;
+
+        if (!isMatch) {
+            return res.status(404).json({
+                success: false,
+                message: "Invalid User or Password"
+            })
+        }
+
+        return res.status(201).json({
+            success: true,
+            message: "User login successfully"
+        })
+       
+    } catch (error) {
+        console.log('error:', error)
+        return res.status(404).json({
+            success: false,
+            message: "SOmehing went wrong"
+        })
+    }
+}
